@@ -21,6 +21,8 @@ public class NosePoem {
 			String auxStr;
 			
 			try {
+				
+				
 				FileReader fileReader = new FileReader (noseFile);
 				BufferedReader buffReader = new BufferedReader(fileReader);
 	

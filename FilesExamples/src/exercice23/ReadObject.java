@@ -23,7 +23,7 @@ public class ReadObject {
 				try {
 					emp = (Employees) inputEmployee.readObject();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				System.out.println(emp);

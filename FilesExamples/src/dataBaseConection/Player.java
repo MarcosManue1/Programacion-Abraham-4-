@@ -2,7 +2,7 @@ package dataBaseConection;
 
 import java.io.Serializable;
 
-public class Player implements Serializable{
+public class Player implements Serializable, Comparable<Player>{
 
 	
 	
@@ -35,5 +35,10 @@ public class Player implements Serializable{
 	public int getPuntuation() {
 		
 		return puntuation;
+	}
+
+	@Override
+	public int compareTo(Player o) {
+		return this.puntuation-o.puntuation;
 	}
 }

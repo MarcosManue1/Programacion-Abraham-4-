@@ -13,10 +13,10 @@ public class Player implements Serializable, Comparable<Player>{
 	String name;
 	int puntuation;
 	
-	public Player(String name, int puntuation) {
+	public Player(String name) {
 		super();
 		this.name = name;
-		this.puntuation = puntuation;
+		this.puntuation = puntuation ;
 	}
 
 	public Player() {

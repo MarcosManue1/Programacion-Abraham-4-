@@ -1,107 +1,80 @@
 package dataBaseConection;
 
-import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+
+import hangMan.Player;
 
 public class DBConection {
-
 	public static void main(String[] args) {
+		// String url="jdbc:mysql://localhost:3306/PlayersDB?useSSL=false&serverTimezone=UTC"; // Modern way
 		
-			//String url = "jdbc:mysql://localhost:3306/PlayersDB?useSSL=false&serverTimezone=UTC"; //Modern way
-	 
-			readPlayersFromDB();
-			
+		readPlayersFromDB();
 	}
 
-	private static ArrayList<Player> readPlayersFromDB() {
-		String url = "jdbc:mysql://10.203.28.74:3306/PlayersDB";
-		String user = "root";
-		String password = ""; // en XAMPP suele estar vacío
-		ArrayList<Player>playersList = new ArrayList<>();
-		try {
-			Connection conn = DriverManager.getConnection(url, user, password);
-			System.out.println("Conexión exitosa");
- 
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Players");
- 
-			Player auxPlayer=null;
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				String name = rs.getString("name");
-				int puntuacion = rs.getInt("puntuation");
+	public static ArrayList<Player> readPlayersFromDB() {
+		String url="jdbc:mysql://10.203.28.74:3306/PlayersDB";
+		String user="root";
+		String password="";//en XAMPP suele estar vacío
 
-				auxPlayer=new Player(name, puntuacion);
-				playersList.add(auxPlayer); 
-				System.out.println(id + " - " + name + " - " + puntuacion);
+		ArrayList<Player> playerList=new ArrayList<Player>();
+		try {
+			Connection conn=DriverManager.getConnection(url, user, password);
+			System.out.println("Conexión exitosa");
+			
+			Statement stmt=conn.createStatement();
+			ResultSet rs=stmt.executeQuery("SELECT * FROM Players");
+
+			while (rs.next()) {
+				int id=rs.getInt("id");
+				String nombre=rs.getString("name");
+				int puntuacion=rs.getInt("puntuation");
+				
+				playerList.add(new Player(puntuacion, nombre));
+				
+//				System.out.println(id+" - "+nombre+" - "+puntuacion);
 			}
-			
-			System.out.println(stmt.execute("INSERT INTO Players (name,puntuation) VALUES ('Abraham',100)"));
-			System.out.println(stmt.execute("UPDATE Players SET puntuation = 2000 WHERE name = 'Anastasio'"));
-			System.out.println(stmt.execute("DELETE Players WHERE name = 'Ana bowele'"));
- 
 			conn.close();
-			System.out.println(playersList.size());
+			System.out.println(playerList.size());
 			
-			Player play = maxPuntuationPlayer(playersList);
-			System.out.println("Best player is: "+play.toString());
+			Player play=maxPuntuationPlayer(playerList);
+			System.out.println("Best Player is "+play);
 			
-			double average=averagePuntuation(playersList);
+			double average=averagePuntuation(playerList);
 			System.out.println("Average Puntuation: "+average);
 			
-			sortList(playersList);
+//			Collections.sort(playerList);			
+//			for (Player player : playerList) {
+//				System.out.println(player);
+//			}
 			
-			Collections.sort(playersList);
-			for(Player player : playersList) {
-				System.out.println(player);
-			}
-		
- 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return playersList;
-
+		return playerList;
 	}
-	
-	public static String insertValues() {
-		String
-	}
-	
 	public static double averagePuntuation(ArrayList<Player> list) {
 		int total=0;
-		for(Player player : list){
-		total +=player.getPuntuation();	
+		for (Player player : list) {
+			total+=player.getPuntuation();
 		}
 		return (double)((double)total/(double)list.size());
 	}
 	
-	public static ArrayList<Player>sortList(ArrayList<Player> list){
-		ArrayList<Player> auxList=list;
-		Collections.sort(auxList);
-		
-		return auxList;
-	}
 	
 	public static Player maxPuntuationPlayer(ArrayList<Player> list) {
-		Player auxPlayer = null;
+		Player auxPlayer=null;
 		int maxPunt=Integer.MIN_VALUE;
-		
-		int pos=0;
-		for(int i = 0; i<list.size();i++) {
-			auxPlayer=list.get(i);
-			if(auxPlayer.getPuntuation() > maxPunt) {
-				maxPunt = auxPlayer.getPuntuation();
-				pos=i;		
+		for (Player player : list) {
+			if(player.getPuntuation()> maxPunt) {
+				maxPunt=player.getPuntuation();
+				auxPlayer=player;
 			}
 		}
-		list.clear();
-		return list.get(pos);
+		return auxPlayer;
 	}
 }
